@@ -1,4 +1,4 @@
-# XSS Cheat Sheet中文
+# XSS Cheat Sheet 2020 中文翻译版
 
 
 
