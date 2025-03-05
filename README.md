@@ -1404,7 +1404,7 @@ onmouseover=location=tagName+innerHTML+previousSibling.nodeValue>cript:`hoverme!
 
 
 
-![image-20250305112119559](img/XSS Cheat Sheet中文版/image-20250305112119559.png)
+![](https://github.com/loulan-ling/XSS-Cheat-Sheet/blob/main/XSS%20Cheat%20Sheet%E4%B8%AD%E6%96%87%E7%89%88/image-20250305112119559.png)
 
 - **payload方案 2（标签 + 属性 + 事件）触发payload**
 
@@ -1413,8 +1413,8 @@ onmouseover=location=tagName+innerHTML+previousSibling.nodeValue>cript:`hoverme!
   ```
 
   
+![](https://github.com/loulan-ling/XSS-Cheat-Sheet/blob/main/XSS%20Cheat%20Sheet%E4%B8%AD%E6%96%87%E7%89%88/image-20250305112209766.png)
 
-![image-20250305112209766](img/XSS Cheat Sheet中文版/image-20250305112209766.png)
 
 - **payload方案3（标签+ href|src|data|action|formaction）触发payload**
 
@@ -1423,5 +1423,5 @@ onmouseover=location=tagName+innerHTML+previousSibling.nodeValue>cript:`hoverme!
 ```
 
 
+![](https://github.com/loulan-ling/XSS-Cheat-Sheet/blob/main/XSS%20Cheat%20Sheet%E4%B8%AD%E6%96%87%E7%89%88/image-20250305112309669.png)
 
-![image-20250305112309669](img/XSS Cheat Sheet中文版/image-20250305112309669.png)
